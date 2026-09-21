@@ -1,4 +1,582 @@
 
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Itinerário Militar - VAP</title>
+  
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- FontAwesome para Ícones -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { inter: ['Inter', 'sans-serif'] },
+          colors: {
+            navy: '#002D5E',
+            'navy-dark': '#001D3D',
+            gold: '#FFBD26',
+            'slate-50': '#F8FAFC'
+          }
+        }
+      }
+    }
+  </script>
 
-<!DOCTYPE html> <html lang="pt-BR"> <head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"> <title>Itinerário Militar - VAP</title> <!-- Google Fonts: Inter --> <link rel="preconnect" href="https://fonts.googleapis.com"> <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"> <!-- FontAwesome para Ícones --> <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"> <!-- Tailwind CSS --> <script src="https://cdn.tailwindcss.com"></script> <script> tailwind.config = { theme: { extend: { fontFamily: { inter: ['Inter', 'sans-serif'] }, colors: { navy: '#002D5E', 'navy-dark': '#001D3D', gold: '#FFBD26', 'slate-50': '#F8FAFC' } } } } </script> <!-- CSS Customizado --> <style> body { font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; } /* Efeito Glassmorphism */ .glass-header { background: rgba(0, 45, 94, 0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); } /* Hide Scrollbar mas mantem scroll funcional */ .no-scrollbar::-webkit-scrollbar { display: none; } .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; } /* Modal Bottom Sheet Animado */ .bottom-sheet-overlay { opacity: 0; pointer-events: none; transition: opacity 0.3s ease-in-out; } .bottom-sheet-overlay.active { opacity: 1; pointer-events: auto; } .bottom-sheet-content { transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); } .bottom-sheet-overlay.active .bottom-sheet-content { transform: translateY(0); } /* Indicador AGORA (Tempo Real) */ .now-indicator-line { position: absolute; left: 0; right: 0; height: 2px; background-color: #EF4444; /* Tailwind Red-500 */ z-index: 10; pointer-events: none; display: flex; align-items: center; } .now-indicator-dot { width: 12px; height: 12px; background-color: #EF4444; border-radius: 50%; position: absolute; left: -6px; box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.3); animation: pulse 1.5s infinite; } @keyframes pulse { 0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); } 70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); } 100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); } } </style> </head> <body class="bg-slate-50 text-gray-800 min-h-screen flex flex-col pb-24 relative"> <!-- Header Fixo Glassmorphism --> <header class="fixed top-0 left-0 right-0 z-30 glass-header border-b-4 border-gold shadow-lg"> <div class="px-4 py-3 flex justify-between items-center"> <div> <h1 class="text-white font-bold text-lg leading-tight">COMANDO DO 4° DISTRITO NAVAL</h1> <h2 class="text-gold font-medium text-sm">Visita AE (FN) Carlos Chagas</h2> </div> <div class="flex gap-2"> <button class="w-12 h-12 rounded-full bg-navy-dark text-white flex justify-center items-center active:scale-95 transition" aria-label="Livreto" onclick="alert('Visualizador de Livreto em breve.')"> <i class="fas fa-book-open"></i> </button> <button class="w-12 h-12 rounded-full bg-navy-dark text-white flex justify-center items-center active:scale-95 transition" aria-label="PDF" onclick="alert('Download do PDF em breve.')"> <i class="fas fa-file-pdf"></i> </button> </div> </div> <!-- Menu de Acesso Rápido --> <nav class="flex overflow-x-auto gap-3 px-4 py-3 no-scrollbar bg-navy-dark/90 text-white"> <button onclick="openModal('autoridades')" class="min-h-[48px] whitespace-nowrap px-4 bg-white/10 rounded-lg text-sm font-semibold active:bg-white/20 transition flex items-center gap-2"><i class="fas fa-star"></i> Autoridades</button> <button onclick="openModal('acomodacao')" class="min-h-[48px] whitespace-nowrap px-4 bg-white/10 rounded-lg text-sm font-semibold active:bg-white/20 transition flex items-center gap-2"><i class="fas fa-bed"></i> Acomodação</button> <button onclick="openModal('uniformes')" class="min-h-[48px] whitespace-nowrap px-4 bg-white/10 rounded-lg text-sm font-semibold active:bg-white/20 transition flex items-center gap-2"><i class="fas fa-tshirt"></i> Uniformes</button> <button onclick="openModal('viaturas')" class="min-h-[48px] whitespace-nowrap px-4 bg-white/10 rounded-lg text-sm font-semibold active:bg-white/20 transition flex items-center gap-2"><i class="fas fa-car"></i> Viaturas</button> <button onclick="openModal('contatos')" class="min-h-[48px] whitespace-nowrap px-4 bg-white/10 rounded-lg text-sm font-semibold active:bg-white/20 transition flex items-center gap-2"><i class="fas fa-phone-alt"></i> Contatos</button> </nav> </header> <!-- Espaçador para o Header Fixo --> <div class="pt-[140px]"></div> <!-- Navegação de Dias (Tabs) --> <div id="tabs-container" class="sticky top-[140px] z-20 bg-slate-50 border-b border-gray-200 px-2 py-2 flex overflow-x-auto gap-2 no-scrollbar shadow-sm"> <!-- Renderizado dinamicamente via JS --> </div> <!-- Container do Cronograma --> <main id="schedule-container" class="px-4 py-6 flex flex-col gap-4 relative"> <!-- Eventos Injetados pelo JS --> </main> <!-- Modais Bottom Sheet --> <div id="bottom-sheet" class="fixed inset-0 z-50 bottom-sheet-overlay flex flex-col justify-end"> <!-- Background Overlay para fechar --> <div class="absolute inset-0 bg-navy-dark/60" onclick="closeModal()"></div> <!-- Conteúdo do Modal --> <div class="bottom-sheet-content bg-white w-full rounded-t-3xl shadow-2xl relative max-h-[85vh] flex flex-col"> <div class="flex justify-center pt-3 pb-2 cursor-pointer" onclick="closeModal()"> <div class="w-12 h-1.5 bg-gray-300 rounded-full"></div> </div> <div class="px-6 pb-6 pt-2 overflow-y-auto no-scrollbar" id="modal-body"> <!-- Conteúdo Injetado --> </div> </div> </div> <script> /** * 3. LÓGICA DE DADOS (JSON) * Baseado rigorosamente no documento fornecido. */ const appData = { logistics: { autoridades: [ { nome: "AE (FN) Carlos Chagas", funcao: "ComGer" }, { nome: "AE Sílvio Luís", funcao: "DGN" }, { nome: "AE Paulo Ferreira", funcao: "CHOC" }, { nome: "AE Vazquez", funcao: "CON" }, { nome: "AE Olsen", funcao: "CM" }, { nome: "VA Batista", funcao: "Com4ºDN (DN-01)" } ], acomodacao: [ { local: "Hotel Universal", cidade: "Santarém/PA" }, { local: "Hotel do Forte", cidade: "Macapá/AP" }, { local: "Residência Funcional Com4ºDN", cidade: "Belém/PA" } ], uniformes: [ { id: "Passeio", desc: "Traje Civil - Passeio" }, { id: "Casual", desc: "Traje Civil - Casual" }, { id: "Esporte Amazônico", desc: "Traje Civil - Esporte Amazônico" }, { id: "OP3/6.6", desc: "Uniforme Militar - OP3/6.6 (Operativo)" }, { id: "TFM", desc: "Treinamento Físico Militar" }, { id: "5.5 sem cobertura", desc: "Uniforme 5.5 (Manga Curta) sem cobertura" }, { id: "5.5 com boné de viagem", desc: "Uniforme 5.5 com boné de viagem" } ], viaturas: [ { prefixo: "VTR-01", tipo: "Sedan Oficial", placa: "NAV-0001", motorista: "CB João" }, { prefixo: "VTR-02", tipo: "Van Executiva", placa: "NAV-0002", motorista: "SG Pedro" } ], contatos: [ { nome: "Ajudante de Ordens (Com4ºDN)", tel: "5591999999999", display: "(91) 99999-9999" }, { nome: "Oficial de Logística", tel: "5591988888888", display: "(91) 98888-8888" }, { nome: "Coordenação Hotel Universal", tel: "5593977777777", display: "(93) 97777-7777" } ] }, schedule: [ { date: "2026-10-02", label: "02 OUT", dayWeek: "SEX", events: [ { id: "02.01", time: "22:55", title: "Chegada do VA Batista (Voo AZUL 4167)", location: "Aeroporto de Santarém", uniform: "Passeio", obs: "Participantes: DN-01 e CFS-01." }, { id: "02.02", time: "23:15", title: "Deslocamento para o Hotel Universal", location: "", uniform: "Passeio", obs: "Participantes: DN-01 e CFS-01." }, { id: "02.03", time: "23:40", title: "Check-in e acomodação", location: "Hotel Universal", uniform: "Passeio", obs: "XXX" } ] }, { date: "2026-10-03", label: "03 OUT", dayWeek: "SÁB", events: [ { id: "03.01", time: "08:00", title: "Café da manhã", location: "Hotel Universal", uniform: "Passeio", obs: "Participantes: DN-01" }, { id: "03.02", time: "13:10", title: "Deslocamento para o aeroporto", location: "", uniform: "Passeio/OP3", obs: "Participantes: DN-01 e CFS-01." }, { id: "03.03", time: "13:35", title: "Chegada do AE FN CARLOS CHAGAS (Voo GOL 1782)", location: "Aeroporto de Santarém", uniform: "Passeio", obs: "Participantes: DN-01 e CFS-01." }, { id: "03.04", time: "14:00", title: "Deslocamento para o restaurante Casa do Saulo", location: "", uniform: "Passeio", obs: "Participantes: ComGer e Sra Carla, DN-01, CFS-01 e comitiva." }, { id: "03.05", time: "14:20", title: "Almoço", location: "Restaurante Casa do Saulo Santarém", uniform: "Passeio", obs: "Participantes: ComGer e Sra Carla, DN-01, CFS-01 e comitiva." }, { id: "03.06", time: "15:30", title: "Check-in e acomodação", location: "Hotel Universal", uniform: "Passeio", obs: "Participantes: ComGer e Sra Carla, DN-01, CFS-01 e comitiva." }, { id: "03.07", time: "16:00", title: "Embarque na lancha e Passeio fluvial pelo encontro das águas", location: "Orla de Santarém, Rios Amazonas e Tapajós", uniform: "Casual", obs: "Término previsto: 18h00. Participantes: ComGer e Sra Carla, DN-01, CFS-01 e comitiva." }, { id: "03.08", time: "18:00", title: "Deslocamento para o hotel Universal", location: "", uniform: "Casual", obs: "Participantes: ComGer e Sra Carla..." }, { id: "03.09", time: "20:00", title: "Jantar", location: "ASC", uniform: "Esporte Amazônico", obs: "Participantes: ComGer e Sra Carla..." } ] }, { date: "2026-10-04", label: "04 OUT", dayWeek: "DOM", events: [ { id: "04.01", time: "08:00", title: "Café da manhã", location: "Hotel Universal", uniform: "Passeio", obs: "Participantes: ComGer e Sra Carla..." }, { id: "04.02", time: "10:00", title: "Deslocamento para o Iate Clube", location: "", uniform: "Casual", obs: "Participantes: ComGer e Sra Carla..." }, { id: "04.03", time: "10:30", title: "Passeio Fluvial pelo Rio Arapiuns", location: "Santarém", uniform: "Casual", obs: "Roteiro: 1. Pontos de fundeio 2. Parada na praia 3. Atracação final no Iate Clube. Término: 18h00" }, { id: "04.04", time: "18:00", title: "Deslocamento para o Hotel Universal", location: "", uniform: "Casual", obs: "" }, { id: "04.05", time: "19:30", title: "Jantar", location: "Dom Mani", uniform: "Esporte Amazônico", obs: "" } ] }, { date: "2026-10-05", label: "05 OUT", dayWeek: "SEG", events: [ { id: "05.01", time: "07:00", title: "Café da manhã", location: "Hotel Universal", uniform: "Passeio", obs: "" }, { id: "05.02", time: "08:00", title: "Deslocamento para a CFS", location: "", uniform: "OP3/6.6", obs: "" }, { id: "05.03", time: "08:05", title: "Honras de recepção", location: "CFS", uniform: "OP3/6.6", obs: "" }, { id: "05.04", time: "08:15", title: "Apresentação sobre o Com4°DN e temas da VAP", location: "CFS-Gabinete", uniform: "OP3/6.6", obs: "Término 09h15" }, { id: "05.05", time: "09:20", title: "Visita às instalações da CFS", location: "CFS", uniform: "OP3/6.6", obs: "Gabinete, Depto STA, CCCAM, EPM" }, { id: "05.07", time: "10:00", title: "Visita às instalações da Cargill", location: "Cargill", uniform: "OP3/6.6", obs: "" }, { id: "05.10", time: "12:30", title: "Almoço e deslocamento para o aeroporto", location: "Churrascaria Dois Irmãos", uniform: "Passeio", obs: "" }, { id: "05.11", time: "15:20", title: "Regresso para Belém (Voo GOL 1731)", location: "Aeroporto de Santarém", uniform: "Passeio", obs: "Pouso 16h45" }, { id: "05.12", time: "20:00", title: "Jantar", location: "Estação das Docas", uniform: "Esporte Amazônico", obs: "Almirantes e esposas" } ] }, { date: "2026-10-06", label: "06 OUT", dayWeek: "TER", events: [ { id: "06.01", time: "06:00", title: "Corrida com a tripulação do 2º BtlOpRib", location: "Rua da Marinha", uniform: "TFM", obs: "5/10 Km" }, { id: "06.05", time: "09:30", title: "Embarque na LOpRib", location: "GPNN Outeiro/PA", uniform: "OP3/6.6", obs: "" }, { id: "06.06", time: "10:30", title: "Embarque no NA PARÁ e Demonstração Operativa", location: "GPNN Outeiro/PA", uniform: "OP3/6.6", obs: "Participação HE" }, { id: "06.07", time: "12:00", title: "Almoço a bordo do NA PARÁ", location: "Baía do Guajará", uniform: "OP3/6.6", obs: "" }, { id: "06.12", time: "18:00", title: "Missa e cerimônia de abertura do Círio", location: "Basílica de Nazaré", uniform: "5.5 sem cobertura", obs: "Facultativo" }, { id: "06.14", time: "23:05", title: "Chegada do AE Sílvio Luís (Voo GOL 1736)", location: "Aeroporto Internacional de Belém", uniform: "Passeio", obs: "" } ] }, { date: "2026-10-07", label: "07 OUT", dayWeek: "QUA", events: [ { id: "07.01", time: "06:00", title: "TFM", location: "Vila Naval Espadarte", uniform: "TFM", obs: "Evento facultativo" }, { id: "07.04", time: "08:30", title: "Honras de recepção e visita CIABA", location: "CIABA", uniform: "OP3/6.6", obs: "" }, { id: "07.06", time: "11:00", title: "Honras de recepção e visita CHN-4", location: "CHN-4", uniform: "OP3/6.6", obs: "" }, { id: "07.07", time: "11:45", title: "Chegada AE Paulo Ferreira (Voo GOL 1730)", location: "Aeroporto Internacional de Belém", uniform: "Passeio/OP3", obs: "" }, { id: "07.08", time: "12:00", title: "Chegada AE Vazquez (Voo GOL 2006)", location: "Aeroporto Internacional de Belém", uniform: "Passeio/OP3", obs: "" }, { id: "07.12", time: "19:00", title: "Cerimônia do Sesquicentenário", location: "Comando do 4° Distrito Naval", uniform: "5.5 com boné de viagem", obs: "" } ] }, { date: "2026-10-08", label: "08 OUT", dayWeek: "QUI", events: [ { id: "08.05", time: "09:00", title: "Decolagem para Macapá (Voo FAB)", location: "BABE", uniform: "OP3/6.6", obs: "" }, { id: "08.06", time: "10:00", title: "Pouso em Macapá", location: "Aeroporto Internacional de Macapá", uniform: "OP3/6.6", obs: "" }, { id: "08.08", time: "11:00", title: "Honras e visita CPAP", location: "CPAP", uniform: "OP3/6.6", obs: "" }, { id: "08.10", time: "14:00", title: "Visita Instalações CDSA", location: "Companhia Docas de Santana", uniform: "OP3/6.6", obs: "" }, { id: "08.15", time: "21:00", title: "Chegada AE Olsen (Voo TAP47)", location: "Aeroporto Internacional de Belém", uniform: "Passeio", obs: "" } ] }, { date: "2026-10-09", label: "09 OUT", dayWeek: "SEX", events: [ { id: "09.03", time: "09:00", title: "Decolagem para Oiapoque", location: "Aeroporto de Macapá", uniform: "OP3/6.6", obs: "" }, { id: "09.06", time: "10:35", title: "Honras de recepção AgOiapoque", location: "AgOiapoque", uniform: "OP3/6.6", obs: "" }, { id: "09.07", time: "11:00", title: "Reunião com comitiva francesa", location: "AgOiapoque", uniform: "OP3/6.6", obs: "" }, { id: "09.08", time: "11:40", title: "Navegação pelo Rio Oiapoque", location: "AgOiapoque", uniform: "OP3/6.6", obs: "" }, { id: "09.11", time: "14:30", title: "Voo de regresso para Belém", location: "Aeroporto de Oiapoque", uniform: "OP3/6.6", obs: "" }, { id: "09.12", time: "16:00", title: "Pouso em Belém", location: "Aeroporto de Belém", uniform: "OP3/6.6", obs: "" } ] } ] }; let currentActiveDate = appData.schedule[0].date; // Funções de Inicialização e Renderização function initApp() { renderTabs(); renderSchedule(currentActiveDate); setInterval(updateIndicator, 60000); // Atualiza indicador a cada minuto updateIndicator(); } function renderTabs() { const container = document.getElementById('tabs-container'); container.innerHTML = ''; appData.schedule.forEach(day => { const isActive = day.date === currentActiveDate; const btn = document.createElement('button'); btn.className = `min-h-[48px] px-5 py-2 rounded-full whitespace-nowrap font-semibold text-sm transition-all duration-300 ${isActive ? 'bg-navy text-white shadow-md' : 'bg-transparent text-gray-500 border border-gray-300'}`; btn.innerHTML = `<span class="block text-xs font-normal opacity-80">${day.dayWeek}</span>${day.label}`; btn.onclick = () => { currentActiveDate = day.date; renderTabs(); renderSchedule(day.date); }; container.appendChild(btn); }); } function getMapsLink(loc) { if (!loc || loc.trim() === '') return '#'; return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(loc)}`; } function renderSchedule(dateStr) { const container = document.getElementById('schedule-container'); container.innerHTML = ''; const dayData = appData.schedule.find(d => d.date === dateStr); if (!dayData) return; dayData.events.forEach(event => { const mapLinkHTML = event.location ? `<a href="${getMapsLink(event.location)}" target="_blank" class="text-blue-600 text-sm mt-2 flex items-center gap-1 active:opacity-70 min-h-[32px] w-max p-1 -ml-1 rounded"><i class="fas fa-map-marker-alt"></i> ${event.location}</a>` : `<span class="text-gray-400 text-sm mt-2 flex items-center gap-1"><i class="fas fa-map-marker-alt"></i> Local não definido</span>`; const html = ` <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 relative event-card" data-time="${event.time}"> <div class="flex justify-between items-start mb-2"> <span class="text-navy font-bold text-2xl tracking-tight">${event.time.replace(':', 'h')}</span> <button onclick="openModal('uniformes')" class="bg-gold/20 text-navy-dark text-xs font-bold px-3 py-1.5 rounded-full min-h-[32px] active:bg-gold/40 transition"> ${event.uniform || 'Passeio'} </button> </div> <h3 class="font-semibold text-gray-800 text-base leading-snug cursor-pointer" onclick="openEventDetails('${event.id}')">${event.title}</h3> ${mapLinkHTML} <button onclick="openEventDetails('${event.id}')" class="absolute inset-0 w-full h-full opacity-0" aria-label="Detalhes de ${event.title}"></button> </div> `; container.insertAdjacentHTML('beforeend', html); }); // Atualiza imediatamente o indicador ao trocar de aba updateIndicator(); } /** * LÓGICA DO INDICADOR "AGORA" */ function updateIndicator() { // Remove indicadores existentes document.querySelectorAll('.now-indicator-line').forEach(el => el.remove()); // Hora e Data Real do Sistema const now = new Date(); // Formata YYYY-MM-DD local const todayStr = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0') + '-' + String(now.getDate()).padStart(2, '0'); // Só desenha a linha se a aba ativa for o dia de hoje if (currentActiveDate !== todayStr) return; const currentMinutes = now.getHours() * 60 + now.getMinutes(); const cards = document.querySelectorAll('.event-card'); let inserted = false; for (let i = 0; i < cards.length; i++) { const card = cards[i]; const timeStr = card.getAttribute('data-time'); // "HH:MM" const [h, m] = timeStr.split(':').map(Number); const eventMinutes = (h * 60) + m; const nextCard = cards[i + 1]; let nextEventMinutes = 24 * 60; // Fim do dia if (nextCard) { const [nh, nm] = nextCard.getAttribute('data-time').split(':').map(Number); nextEventMinutes = (nh * 60) + nm; } // Se a hora atual está entre este evento e o próximo if (currentMinutes >= eventMinutes && currentMinutes < nextEventMinutes) { const indicatorHTML = ` <div class="now-indicator-line" style="top: 0px;"> <div class="now-indicator-dot"></div> </div> `; card.style.position = 'relative'; // Injeta a linha no topo do cartão ativo card.insertAdjacentHTML('afterbegin', indicatorHTML); inserted = true; break; } } // Se for antes do primeiro evento do dia if (!inserted && cards.length > 0) { const [h0, m0] = cards[0].getAttribute('data-time').split(':').map(Number); if (currentMinutes < (h0 * 60)) { cards[0].insertAdjacentHTML('beforebegin', ` <div class="now-indicator-line relative my-2 w-full"> <div class="now-indicator-dot"></div> </div> `); } } } /** * MODAIS E INTERFACES (Bottom Sheet) */ function openModal(type) { const modalBody = document.getElementById('modal-body'); let content = ''; if (type === 'autoridades') { content = `<h2 class="text-xl font-bold text-navy mb-4"><i class="fas fa-star mr-2 text-gold"></i> Autoridades</h2><ul class="space-y-3">`; appData.logistics.autoridades.forEach(a => { content += `<li class="flex flex-col bg-gray-50 p-3 rounded-lg border border-gray-100"><span class="font-bold text-gray-800">${a.funcao}</span><span class="text-gray-600 text-sm">${a.nome}</span></li>`; }); content += `</ul>`; } else if (type === 'acomodacao') { content = `<h2 class="text-xl font-bold text-navy mb-4"><i class="fas fa-bed mr-2 text-gold"></i> Acomodações</h2><ul class="space-y-3">`; appData.logistics.acomodacao.forEach(a => { content += `<li class="flex flex-col bg-gray-50 p-3 rounded-lg border border-gray-100"><span class="font-bold text-gray-800">${a.local}</span><span class="text-gray-600 text-sm"><i class="fas fa-map-marker-alt mr-1"></i> ${a.cidade}</span></li>`; }); content += `</ul>`; } else if (type === 'uniformes') { content = `<h2 class="text-xl font-bold text-navy mb-4"><i class="fas fa-tshirt mr-2 text-gold"></i> Planilha de Uniformes</h2><div class="space-y-2">`; appData.logistics.uniformes.forEach(u => { content += `<div class="bg-gray-50 p-3 rounded-lg border border-gray-100"><span class="inline-block bg-navy text-white text-xs px-2 py-1 rounded mb-1 font-bold">${u.id}</span><p class="text-sm text-gray-700">${u.desc}</p></div>`; }); content += `</div>`; } else if (type === 'viaturas') { content = `<h2 class="text-xl font-bold text-navy mb-4"><i class="fas fa-car mr-2 text-gold"></i> Logística de Viaturas</h2><div class="space-y-3">`; appData.logistics.viaturas.forEach(v => { content += `<div class="bg-gray-50 p-3 rounded-lg border border-gray-100 flex justify-between items-center"> <div><p class="font-bold text-gray-800">${v.prefixo} <span class="text-xs bg-gray-200 text-gray-600 px-2 py-0.5 rounded ml-1">${v.placa}</span></p><p class="text-sm text-gray-600">${v.tipo} | Motorista: ${v.motorista}</p></div> </div>`; }); content += `</div>`; } else if (type === 'contatos') { content = `<h2 class="text-xl font-bold text-navy mb-4"><i class="fas fa-phone-alt mr-2 text-gold"></i> Contatos da Coordenação</h2><div class="space-y-3">`; appData.logistics.contatos.forEach(c => { content += `<div class="bg-gray-50 p-3 rounded-lg border border-gray-100 flex flex-col gap-2"> <div><p class="font-bold text-gray-800">${c.nome}</p><p class="text-sm text-gray-600 font-mono">${c.display}</p></div> <div class="flex gap-2"> <a href="tel:+${c.tel}" class="flex-1 bg-navy text-white text-center py-2 rounded-lg text-sm font-semibold min-h-[44px] flex items-center justify-center gap-2 active:bg-navy-dark"><i class="fas fa-phone"></i> Ligar</a> <a href="https://wa.me/${c.tel}" target="_blank" class="flex-1 bg-green-600 text-white text-center py-2 rounded-lg text-sm font-semibold min-h-[44px] flex items-center justify-center gap-2 active:bg-green-700"><i class="fab fa-whatsapp text-lg"></i> WhatsApp</a> </div> </div>`; }); content += `</div>`; } modalBody.innerHTML = content; document.getElementById('bottom-sheet').classList.add('active'); } function openEventDetails(eventId) { // Busca dados do evento específico iterando pelo schedule inteiro let evData = null; let evDate = null; appData.schedule.forEach(d => { const found = d.events.find(e => e.id === eventId); if (found) { evData = found; evDate = d.label; } }); if (!evData) return; const modalBody = document.getElementById('modal-body'); modalBody.innerHTML = ` <div class="flex items-center justify-between mb-4"> <h2 class="text-2xl font-bold text-navy">${evData.time.replace(':', 'h')}</h2> <span class="text-sm text-gray-500 font-semibold">${evDate}</span> </div> <h3 class="text-lg font-bold text-gray-800 mb-4">${evData.title}</h3> <div class="space-y-4"> ${evData.location ? ` <div> <p class="text-xs text-gray-500 font-semibold uppercase tracking-wider mb-1">Local</p> <a href="${getMapsLink(evData.location)}" target="_blank" class="flex items-center gap-2 text-blue-600 bg-blue-50 p-3 rounded-lg min-h-[48px] font-medium active:bg-blue-100 transition"> <i class="fas fa-map-marker-alt text-lg"></i> ${evData.location} <i class="fas fa-external-link-alt ml-auto text-sm opacity-50"></i> </a> </div> ` : ''} <div> <p class="text-xs text-gray-500 font-semibold uppercase tracking-wider mb-1">Uniforme / Traje</p> <div class="bg-gray-50 p-3 rounded-lg font-medium text-gray-800 flex items-center gap-2"> <i class="fas fa-tshirt text-gray-400"></i> ${evData.uniform || 'Não especificado'} </div> </div> ${evData.obs ? ` <div> <p class="text-xs text-gray-500 font-semibold uppercase tracking-wider mb-1">Observações e Participantes</p> <div class="bg-yellow-50/50 border border-yellow-100 p-3 rounded-lg text-sm text-gray-700 whitespace-pre-wrap"> ${evData.obs} </div> </div> ` : ''} </div> `; document.getElementById('bottom-sheet').classList.add('active'); } function closeModal() { document.getElementById('bottom-sheet').classList.remove('active'); } // Inicializar aplicação window.addEventListener('DOMContentLoaded', initApp); </script> </body> </html> 
+  <!-- CSS Customizado -->
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+    /* Efeito Glassmorphism */
+    .glass-header {
+      background: rgba(0, 45, 94, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+    /* Hide Scrollbar mas mantem scroll funcional */
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    
+    /* Modal Bottom Sheet Animado */
+    .bottom-sheet-overlay {
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease-in-out;
+    }
+    .bottom-sheet-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .bottom-sheet-content {
+      transform: translateY(100%);
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .bottom-sheet-overlay.active .bottom-sheet-content {
+      transform: translateY(0);
+    }
+
+    /* Indicador AGORA (Tempo Real) */
+    .now-indicator-line {
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background-color: #EF4444; /* Tailwind Red-500 */
+      z-index: 10;
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+    }
+    .now-indicator-dot {
+      width: 12px;
+      height: 12px;
+      background-color: #EF4444;
+      border-radius: 50%;
+      position: absolute;
+      left: -6px;
+      box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.3);
+      animation: pulse 1.5s infinite;
+    }
+    @keyframes pulse {
+      0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+      70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+      100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-gray-800 min-h-screen flex flex-col pb-24 relative">
+
+  <!-- Header Fixo Glassmorphism -->
+  <header class="fixed top-0 left-0 right-0 z-30 glass-header border-b-4 border-gold shadow-lg">
+    <div class="px-4 py-3 flex justify-between items-center">
+      <div>
+        <h1 class="text-white font-bold text-lg leading-tight">COMANDO DO 4° DISTRITO NAVAL</h1>
+        <h2 class="text-gold font-medium text-sm">Visita AE (FN) Carlos Chagas</h2>
+      </div>
+      <div class="flex gap-2">
+        <button class="w-12 h-12 rounded-full bg-navy-dark text-white flex justify-center items-center active:scale-95 transition" aria-label="Livreto" onclick="alert('Visualizador de Livreto em breve.')">
+          <i class="fas fa-book-open"></i>
+        </button>
+        <button class="w-12 h-12 rounded-full bg-navy-dark text-white flex justify-center items-center active:scale-95 transition" aria-label="PDF" onclick="alert('Download do PDF em breve.')">
+          <i class="fas fa-file-pdf"></i>
+        </button>
+      </div>
+    </div>
+    
+    <!-- Menu de Acesso Rápido -->
+    <nav class="flex overflow-x-auto gap-3 px-4 py-3 no-scrollbar bg-navy-dark/90 text-white">
+      <button onclick="openModal('autoridades')" class="min-h-[48px] whitespace-nowrap px-4 bg-white/10 rounded-lg text-sm font-semibold active:bg-white/20 transition flex items-center gap-2"><i class="fas fa-star"></i> Autoridades</button>
+      <button onclick="openModal('acomodacao')" class="min-h-[48px] whitespace-nowrap px-4 bg-white/10 rounded-lg text-sm font-semibold active:bg-white/20 transition flex items-center gap-2"><i class="fas fa-bed"></i> Acomodação</button>
+      <button onclick="openModal('uniformes')" class="min-h-[48px] whitespace-nowrap px-4 bg-white/10 rounded-lg text-sm font-semibold active:bg-white/20 transition flex items-center gap-2"><i class="fas fa-tshirt"></i> Uniformes</button>
+      <button onclick="openModal('viaturas')" class="min-h-[48px] whitespace-nowrap px-4 bg-white/10 rounded-lg text-sm font-semibold active:bg-white/20 transition flex items-center gap-2"><i class="fas fa-car"></i> Viaturas</button>
+      <button onclick="openModal('contatos')" class="min-h-[48px] whitespace-nowrap px-4 bg-white/10 rounded-lg text-sm font-semibold active:bg-white/20 transition flex items-center gap-2"><i class="fas fa-phone-alt"></i> Contatos</button>
+    </nav>
+  </header>
+
+  <!-- Espaçador para o Header Fixo -->
+  <div class="pt-[140px]"></div>
+
+  <!-- Navegação de Dias (Tabs) -->
+  <div id="tabs-container" class="sticky top-[140px] z-20 bg-slate-50 border-b border-gray-200 px-2 py-2 flex overflow-x-auto gap-2 no-scrollbar shadow-sm">
+    <!-- Renderizado dinamicamente via JS -->
+  </div>
+
+  <!-- Container do Cronograma -->
+  <main id="schedule-container" class="px-4 py-6 flex flex-col gap-4 relative">
+    <!-- Eventos Injetados pelo JS -->
+  </main>
+  
+  <!-- Legenda de Horários Estimados -->
+  <div class="px-4 pb-6 text-xs text-gray-400 text-center font-medium">
+    <p>* Horário estimado (indicado como ASD ou sem horário no Programa de Eventos original).</p>
+  </div>
+
+  <!-- Modais Bottom Sheet -->
+  <div id="bottom-sheet" class="fixed inset-0 z-50 bottom-sheet-overlay flex flex-col justify-end">
+    <!-- Background Overlay para fechar -->
+    <div class="absolute inset-0 bg-navy-dark/60" onclick="closeModal()"></div>
+    
+    <!-- Conteúdo do Modal -->
+    <div class="bottom-sheet-content bg-white w-full rounded-t-3xl shadow-2xl relative max-h-[85vh] flex flex-col">
+      <div class="flex justify-center pt-3 pb-2 cursor-pointer" onclick="closeModal()">
+        <div class="w-12 h-1.5 bg-gray-300 rounded-full"></div>
+      </div>
+      <div class="px-6 pb-6 pt-2 overflow-y-auto no-scrollbar" id="modal-body">
+        <!-- Conteúdo Injetado -->
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /**
+     * 3. LÓGICA DE DADOS (JSON)
+     */
+    const appData = {
+      logistics: {
+        autoridades: [
+          { nome: "AE (FN) Carlos Chagas", funcao: "ComGer" },
+          { nome: "AE Sílvio Luís", funcao: "DGN" },
+          { nome: "AE Paulo Ferreira", funcao: "CHOC" },
+          { nome: "AE Vazquez", funcao: "CON" },
+          { nome: "AE Olsen", funcao: "CM" },
+          { nome: "VA Batista", funcao: "Com4ºDN (DN-01)" }
+        ],
+        acomodacao: [
+          { local: "Hotel Universal", cidade: "Santarém/PA" },
+          { local: "Hotel do Forte", cidade: "Macapá/AP" },
+          { local: "Residência Funcional Com4ºDN", cidade: "Belém/PA" }
+        ],
+        uniformes: [
+          { id: "Passeio", desc: "Traje Civil - Passeio" },
+          { id: "Casual", desc: "Traje Civil - Casual" },
+          { id: "Esporte Amazônico", desc: "Traje Civil - Esporte Amazônico" },
+          { id: "OP3/6.6", desc: "Uniforme Militar - OP3/6.6 (Operativo)" },
+          { id: "TFM", desc: "Treinamento Físico Militar" },
+          { id: "5.5 sem cobertura", desc: "Uniforme 5.5 (Manga Curta) sem cobertura" },
+          { id: "5.5 com boné de viagem", desc: "Uniforme 5.5 com boné de viagem" }
+        ],
+        viaturas: [
+          { prefixo: "VTR-01", tipo: "Sedan Oficial", placa: "NAV-0001", motorista: "CB João" },
+          { prefixo: "VTR-02", tipo: "Van Executiva", placa: "NAV-0002", motorista: "SG Pedro" }
+        ],
+        contatos: [
+          { nome: "Ajudante de Ordens (Com4ºDN)", tel: "5591999999999", display: "(91) 99999-9999" },
+          { nome: "Oficial de Logística", tel: "5591988888888", display: "(91) 98888-8888" },
+          { nome: "Coordenação Hotel Universal", tel: "5593977777777", display: "(93) 97777-7777" }
+        ]
+      },
+      schedule: [
+        {
+          date: "2026-10-02",
+          label: "02 OUT",
+          dayWeek: "SEX",
+          events: [
+            { id: "02.01", time: "22:55", title: "Chegada do VA Batista (Voo AZUL 4167)", location: "Aeroporto de Santarém", uniform: "Passeio", obs: "Participantes: DN-01 e CFS-01." },
+            { id: "02.02", time: "23:15", title: "Deslocamento para o Hotel Universal", location: "", uniform: "Passeio", obs: "Participantes: DN-01 e CFS-01." },
+            { id: "02.03", time: "23:40", title: "Check-in e acomodação", location: "Hotel Universal", uniform: "", obs: "XXX" }
+          ]
+        },
+        {
+          date: "2026-10-03",
+          label: "03 OUT",
+          dayWeek: "SÁB",
+          events: [
+            { id: "03.01", time: "08:00", title: "Café da manhã", location: "Hotel Universal", uniform: "", obs: "Participantes: DN-01" },
+            { id: "03.02", time: "13:10", title: "Deslocamento para o aeroporto", location: "", uniform: "Passeio/OP3", obs: "Participantes: DN-01 e CFS-01." },
+            { id: "03.03", time: "13:35", title: "Chegada do AE FN CARLOS CHAGAS (Voo GOL 1782)", location: "Aeroporto de Santarém", uniform: "Passeio", obs: "Participantes: DN-01 e CFS-01." },
+            { id: "03.04", time: "14:00", title: "Deslocamento para o restaurante Casa do Saulo", location: "", uniform: "Passeio", obs: "Participantes: ComGer e Sra Carla, DN-01, CFS-01 e comitiva." },
+            { id: "03.05", time: "14:20", title: "Almoço", location: "Restaurante Casa do Saulo Santarém", uniform: "", obs: "Participantes: ComGer e Sra Carla, DN-01, CFS-01 e comitiva." },
+            { id: "03.06", time: "15:30", title: "Check-in e acomodação", location: "Hotel Universal", uniform: "", obs: "Participantes: ComGer e Sra Carla, DN-01, CFS-01 e comitiva." },
+            { id: "03.07", time: "16:00", title: "Embarque na lancha e Passeio fluvial pelo encontro das águas", location: "Orla de Santarém, Rios Amazonas e Tapajós", uniform: "Casual", obs: "Participantes: ComGer e Sra Carla, DN-01, CFS-01 e comitiva." },
+            { id: "03.08", time: "18:00", title: "Deslocamento para o hotel Universal", location: "", uniform: "Casual", obs: "Participantes: ComGer e Sra Carla, DN-01, CFS-01 e comitiva." },
+            { id: "03.09", time: "20:00", title: "Jantar", location: "ASC", uniform: "Esporte Amazônico", obs: "Participantes: ComGer e Sra Carla, DN-01, CFS-01 e comitiva." }
+          ]
+        },
+        {
+          date: "2026-10-04",
+          label: "04 OUT",
+          dayWeek: "DOM",
+          events: [
+            { id: "04.01", time: "08:00", title: "Café da manhã", location: "Hotel Universal", uniform: "", obs: "Participantes: ComGer e Sra Carla, DN-01, CFS-01 e comitiva." },
+            { id: "04.02", time: "10:00", title: "Deslocamento para o Iate Clube", location: "", uniform: "Casual", obs: "Participantes: ComGer e Sra Carla, DN-01, CFS-01 e comitiva." },
+            { id: "04.03", time: "10:30", title: "Passeio Fluvial pelo Rio Arapiuns", location: "Santarém", uniform: "Casual", obs: "Roteiro:\n1. Pontos de fundeio para operação de transshipment\n2. Parada na praia da ponta grande para almoço\n3. Atracação final no Iate Clube" },
+            { id: "04.04", time: "18:00", title: "Deslocamento para o Hotel Universal", location: "", uniform: "Casual", obs: "Participantes: ComGer e Sra Carla, DN-01, CFS-01 e comitiva." },
+            { id: "04.05", time: "19:30", title: "Jantar", location: "Dom Mani", uniform: "Esporte Amazônico", obs: "Participantes: ComGer e Sra Carla, DN-01, CFS-01 e comitiva." }
+          ]
+        },
+        {
+          date: "2026-10-05",
+          label: "05 OUT",
+          dayWeek: "SEG",
+          events: [
+            { id: "05.01", time: "07:00", title: "Café da manhã", location: "Hotel Universal", uniform: "", obs: "Participantes: ComGer e Sra Carla, DN-01, CFS-01 e comitiva." },
+            { id: "05.02", time: "08:00", title: "Deslocamento para a CFS", location: "", uniform: "OP3/6.6", obs: "Participantes: ComGer, DN-01, CFS-01 e comitiva." },
+            { id: "05.03", time: "08:05", title: "Honras de recepção", location: "CFS", uniform: "OP3/6.6", obs: "Participantes: ComGer, DN-01, CFS-01 e comitiva." },
+            { id: "05.04", time: "08:15", title: "Apresentação sobre o Com4°DN e temas da VAP", location: "CFS-Gabinete", uniform: "OP3/6.6", obs: "O Com4°DN fará a apresentação" },
+            { id: "05.05", time: "09:20", title: "Visita às instalações da CFS", location: "CFS", uniform: "OP3/6.6", obs: "Roteiro:\n1. Gabinete\n2. Departamento STA\n3. CCCAM\n4. EPM" },
+            { id: "05.06", time: "09:40", title: "Honras de despedida e deslocamento para Cargill", location: "CFS", uniform: "OP3/6.6", obs: "Participantes: ComGer, DN-01, CFS-01 e comitiva." },
+            { id: "05.07", time: "10:00", title: "Visita às instalações da Cargill", location: "Cargill", uniform: "OP3/6.6", obs: "Participantes: ComGer, DN-01, CFS-01 e comitiva." },
+            { id: "05.08", time: "11:35", title: "Deslocamento para o hotel Universal", location: "", uniform: "OP3/6.6", obs: "Participantes: ComGer, DN-01, CFS-01 e comitiva." },
+            { id: "05.09", time: "12:20", title: "Check-out e deslocamento para o almoço", location: "", uniform: "Passeio", obs: "Participantes: ComGer e Sra Carla, DN-01, CFS-01 e Sra Hellen Caroline, comitiva." },
+            { id: "05.10", time: "12:30", title: "Almoço e deslocamento para o aeroporto", location: "Churrascaria Dois Irmãos", uniform: "Passeio", obs: "Participantes: ComGer e Sra Carla, DN-01, CFS-01 e Sra Hellen Caroline, comitiva." },
+            { id: "05.11", time: "15:20", title: "Regresso para Belém (Voo GOL 1731)", location: "Aeroporto de Santarém", uniform: "Passeio", obs: "Participantes: ComGer e Sra Carla, DN-01 e comitiva." },
+            { id: "05.12", time: "20:00", title: "Jantar", location: "Estação das Docas", uniform: "Esporte Amazônico", obs: "Participantes: Almirantes e esposas" }
+          ]
+        },
+        {
+          date: "2026-10-06",
+          label: "06 OUT",
+          dayWeek: "TER",
+          events: [
+            { id: "06.01", time: "06:00", title: "Corrida com a tripulação do 2º Batalhão de Operações Ribeirinhas", location: "Rua da Marinha", uniform: "TFM", obs: "Corrida de 5/10 Km na nova Rua da Marinha" },
+            { id: "06.02", time: "07:40", title: "Café da manhã", location: "Rancho do 2° Batalhão de Operações Ribeirinhas", uniform: "TFM", obs: "Participantes: ComGer, DN-01, DN-02, Tripulação do 2ºBtlOpRib e comitiva." },
+            { id: "06.03", time: "08:30", title: "Deslocamento para residência", location: "", uniform: "TFM", obs: "Participantes: ComGer, DN-01, DN-02 e comitiva." },
+            { id: "06.04", time: "09:20", title: "Deslocamento para o Grupamento de Patrulha Naval do Norte", location: "", uniform: "OP3/6.6", obs: "Participantes: ComGer, DN-01, DN-02 e comitiva." },
+            { id: "06.05", time: "09:30", title: "Embarque na LOpRib", location: "GPNN Outeiro/PA", uniform: "OP3/6.6", obs: "Participantes: ComGer, DN-01, DN-02, GPNN, 2ºBtlOpRib e comitiva." },
+            { id: "06.06", time: "10:30", title: "Embarque no NA PARÁ e início da Demonstração Operativa", location: "GPNN Outeiro/PA", uniform: "OP3/6.6", obs: "Participantes: ComGer, DN-01, DN-02, GPNN, 2ºBtlOpRib e comitiva. Haverá participação do HE" },
+            { id: "06.07", time: "12:00", title: "Almoço a bordo do NA PARÁ", location: "Baía do Guajará", uniform: "OP3/6.6", obs: "Participantes: ComGer, DN-01, DN-02, GPNN, 2ºBtlOpRib e comitiva." },
+            { id: "06.08", time: "13:30", title: "Visita ao NASH Anna Nery", location: "GPNN", uniform: "OP3/6.6", obs: "Participantes: ComGer, DN-01, DN-02, GPNN e comitiva." },
+            { id: "06.09", time: "14:50", title: "Visita às instalações do Centro de Intendência da Marinha em Belém e área de cessão de uso onerosa da BNVC", location: "CeIMBe/BNVC", uniform: "OP3/6.6", obs: "Roteiro\n1. Sede Administrativa: Corredor interno (1º andar) e Paióis de Abastecimento (paiol E e paiol G);\n2. Posto de Distribuição de Uniformes (PDU);\n3. Corredor externo e Filtro de Água (Purificatta); e\n4. Instalações do Rancho (Refeitórios, Cozinha, Padaria, Salão de Eventos e Áreas Externas)\n5. Áreas de cessão de uso onerosa da BNVC\nParticipantes: ComGer, DN-01, DN-02 e comitiva." },
+            { id: "06.10", time: "15:50", title: "Deslocamento para a residência", location: "", uniform: "OP3/6.6", obs: "Participantes: ComGer, DN-01, DN-02 e comitiva." },
+            { id: "06.11", time: "16:00", title: "Deslocamento para Basílica Santuário de Nossa Senhora de Nazaré", location: "", uniform: "5.5 sem cobertura", obs: "Participantes: Almirantes e esposas. Evento facultativo" },
+            { id: "06.12", time: "18:00", title: "Missa e cerimônia de abertura do Círio", location: "Basílica de Nazaré / Casa de Plácido", uniform: "5.5 sem cobertura", obs: "Participantes: Almirantes e esposas. Evento facultativo" },
+            { id: "06.13", time: "20:00*", title: "Jantar", location: "Residência funcional do Com4°DN", uniform: "", obs: "Participantes: Almirantes e esposas." },
+            { id: "06.14", time: "23:05", title: "Chegada do AE Sílvio Luís (DGN) (Voo GOL 1736)", location: "Aeroporto Internacional de Belém", uniform: "", obs: "Participantes: DN-01 e DN-02" }
+          ]
+        },
+        {
+          date: "2026-10-07",
+          label: "07 OUT",
+          dayWeek: "QUA",
+          events: [
+            { id: "07.01", time: "06:00", title: "TFM", location: "Vila Naval Espadarte ou Parque da Cidade", uniform: "TFM", obs: "Evento facultativo" },
+            { id: "07.02", time: "07:30", title: "Café da manhã", location: "Residência funcional do Com4°DN e HT", uniform: "", obs: "Participantes: Almirantes e esposas." },
+            { id: "07.03", time: "08:15", title: "Deslocamento para o CIABA", location: "", uniform: "OP3/6.6", obs: "Participantes: ComGer, DGN, DN-01, DN-02" },
+            { id: "07.04", time: "08:30", title: "Honras de recepção e visita às instalações do CIABA", location: "CIABA", uniform: "OP3/6.6", obs: "Roteiro:\n1. Laboratórios de Eletrônica, Eletrotécnica, Eletricidade, Controle de Processos e Automação.\n2. Galpão de Máquinas\n3. Laboratório de Diesel - Elétrica\n4. Pátio do CBINC / CAV\n5. Prédio dos simuladores" },
+            { id: "07.05", time: "10:50", title: "Deslocamento para o CHN-4", location: "", uniform: "", obs: "Participantes: ComGer, DGN, DN-01, DN-02" },
+            { id: "07.06", time: "11:00", title: "Honras de recepção e visita às instalações do CHN-4", location: "CHN-4", uniform: "", obs: "Roteiro:\n1. Seção de Análise de Dados e Elementos\n2. Seção de Cartografia\n3. Pátio de Boias\n4. Paiol de Equipamentos Hidrográficos\n5. Oficina de Metalurgia\n6. Oficina de Carpintaria" },
+            { id: "07.07", time: "11:45", title: "Chegada do AE Paulo Ferreira (CHOC) (Voo GOL 1730)", location: "Aeroporto Internacional de Belém", uniform: "Passeio/OP3", obs: "Participantes: DN-01" },
+            { id: "07.08", time: "12:00", title: "Chegada do AE Vazquez (CON) (Voo GOL 2006)", location: "Aeroporto Internacional de Belém", uniform: "Passeio/OP3", obs: "Participantes: DN-01" },
+            { id: "07.09", time: "12:40", title: "Almoço", location: "Residência funcional do Com4°DN", uniform: "", obs: "Participantes: Almirantes e esposas." },
+            { id: "07.10", time: "18:30", title: "Tarde livre", location: "", uniform: "5.5 com boné de viagem", obs: "XXX\nParticipantes: Almirantes e esposas." },
+            { id: "07.11", time: "18:45*", title: "Deslocamento para o Com4°DN", location: "", uniform: "5.5 com boné de viagem", obs: "Participantes: Almirantes e esposas." },
+            { id: "07.12", time: "19:00", title: "Cerimônia do Sesquicentenário da sede do Comando do 4º Distrito Naval", location: "Comando do 4° Distrito Naval", uniform: "5.5 com boné de viagem", obs: "Participantes: Almirantes e esposas." }
+          ]
+        },
+        {
+          date: "2026-10-08",
+          label: "08 OUT",
+          dayWeek: "QUI",
+          events: [
+            { id: "08.01", time: "02:15", title: "Chegada da Sra Ana - Esposa do AE Sílvio Luís (Voo GOL 2008)", location: "Aeroporto Internacional de Belém", uniform: "", obs: "Participantes: DGN e DN-01" },
+            { id: "08.02", time: "06:00", title: "TFM", location: "Vila Naval Espadarte", uniform: "TFM", obs: "Evento facultativo" },
+            { id: "08.03", time: "07:30", title: "Café da manhã", location: "Residência funcional do Com4°DN", uniform: "OP3/6.6", obs: "Participantes: Almirantes e esposas." },
+            { id: "08.04", time: "08:20", title: "Deslocamento para a Base aérea de Belém (BABE)", location: "", uniform: "", obs: "Participantes: ComGer, DGN, DN-02" },
+            { id: "08.05", time: "09:00", title: "Decolagem para Macapá", location: "Voo FAB", uniform: "OP3/6.6", obs: "Participantes: ComGer, DGN, DN-02" },
+            { id: "08.06", time: "10:00", title: "Pouso em Macapá", location: "Aeroporto Internacional de Macapá", uniform: "OP3/6.6", obs: "Participantes: ComGer, DGN, DN-02, CPAP" },
+            { id: "08.07", time: "10:20", title: "Deslocamento para CPAP", location: "", uniform: "OP3/6.6", obs: "Participantes: ComGer, DGN, DN-02, CPAP" },
+            { id: "08.08", time: "11:00", title: "Honras de recepção e visita às instalações da CPAP", location: "CPAP", uniform: "OP3/6.6", obs: "Roteiro:\n1. Gabinete\n2. GAP\n4. Seção de saúde\n5. Auditório\n6. Clube Tucuju\n7. Ensino Profissional Marítimo\n8. Cais" },
+            { id: "08.09", time: "12:15", title: "Almoço", location: "CPAP", uniform: "OP3/6.6", obs: "Participantes: ComGer, DGN, DN-02, CPAP" },
+            { id: "08.10", time: "14:00", title: "Visita às instalações portuárias da CDSA", location: "Companhia Docas de Santana", uniform: "OP3/6.6", obs: "Participantes: ComGer, DGN, DN-02, CPAP" },
+            { id: "08.11", time: "15:10", title: "Deslocamento para o terreno da Fazendinha", location: "", uniform: "OP3/6.6", obs: "Participantes: ComGer, DGN, DN-02, CPAP" },
+            { id: "08.12", time: "15:30", title: "Visita ao terreno da Fazendinha e deslocamento para o hotel", location: "Fazendinha", uniform: "OP3/6.6", obs: "Participantes: ComGer, DGN, DN-02, CPAP" },
+            { id: "08.13", time: "16:30", title: "Check-in no hotel e acomodação", location: "Hotel do Forte", uniform: "OP3/6.6", obs: "Participantes: ComGer, DGN, DN-02, CPAP" },
+            { id: "08.14", time: "19:30", title: "Jantar com Soamarinos", location: "Restaurante Estaleiro", uniform: "Esporte Amazônico", obs: "Participantes: ComGer, DGN, DN-02, CPAP" },
+            { id: "08.15", time: "21:00", title: "Chegada do AE Olsen (CM) a Belém (Voo TAP47)", location: "Aeroporto Internacional de Belém", uniform: "", obs: "Participantes: DN-01" }
+          ]
+        },
+        {
+          date: "2026-10-09",
+          label: "09 OUT",
+          dayWeek: "SEX",
+          events: [
+            { id: "09.01", time: "07:00", title: "Café da manhã", location: "Hotel do Forte", uniform: "", obs: "Participantes: ComGer, DGN, DN-02, CPAP" },
+            { id: "09.02", time: "08:00", title: "Check-out e deslocamento para o aeroporto", location: "Aeroporto de Macapá", uniform: "OP3/6.6", obs: "Participantes: ComGer, DGN, DN-02, CPAP" },
+            { id: "09.03", time: "09:00", title: "Decolagem para Oiapoque", location: "", uniform: "OP3/6.6", obs: "Participantes: ComGer, DGN, DN-02, CPAP" },
+            { id: "09.04", time: "10:00", title: "Pouso no Aeroporto", location: "Aeroporto de Oiapoque", uniform: "OP3/6.6", obs: "Participantes: ComGer, DGN, DN-02, CPAP" },
+            { id: "09.05", time: "10:20", title: "Deslocamento para Agência do Oiapoque", location: "", uniform: "OP3/6.6", obs: "Participantes: ComGer, DGN, DN-02, CPAP" },
+            { id: "09.06", time: "10:35", title: "Honras de recepção e visita às instalações da AgOiapoque", location: "AgOiapoque", uniform: "OP3/6.6", obs: "Participantes: ComGer, DGN, DN-02, CPAP, Agente" },
+            { id: "09.07", time: "11:00", title: "Reunião com comitiva francesa", location: "AgOiapoque", uniform: "OP3/6.6", obs: "Participantes: ComGer, DGN, DN-02, CPAP, Agente" },
+            { id: "09.08", time: "11:40", title: "Navegação pelo Rio Oiapoque", location: "AgOiapoque", uniform: "OP3/6.6", obs: "Embarque pela AgOiapoque" },
+            { id: "09.09", time: "12:30", title: "Almoço por adesão", location: "Churrascaria Gaúcha", uniform: "OP3/6.6", obs: "Participantes: ComGer, DGN, DN-02, CPAP, Agente" },
+            { id: "09.10", time: "14:00", title: "Deslocamento para o aeroporto", location: "", uniform: "OP3/6.6", obs: "Participantes: ComGer, DGN, DN-02, CPAP, Agente" },
+            { id: "09.11", time: "14:30", title: "Voo de regresso para Belém", location: "Aeroporto de Oiapoque", uniform: "OP3/6.6", obs: "Participantes: ComGer, DGN, DN-02" },
+            { id: "09.12", time: "16:00", title: "Pouso em Belém e deslocamento para residência funcional do Com4°DN", location: "Aeroporto de Belém", uniform: "OP3/6.6", obs: "Participantes: ComGer, DGN, DN-02" },
+            { id: "09.13", time: "19:30", title: "Jantar", location: "ASD", uniform: "Esporte Amazônico", obs: "Participantes: Almirantes e esposas" }
+          ]
+        }
+      ]
+    };
+
+    let currentActiveDate = appData.schedule[0].date;
+
+    // Funções de Inicialização e Renderização
+    function initApp() {
+      renderTabs();
+      renderSchedule(currentActiveDate);
+      setInterval(updateIndicator, 60000); // Atualiza indicador a cada minuto
+      updateIndicator();
+    }
+
+    function renderTabs() {
+      const container = document.getElementById('tabs-container');
+      container.innerHTML = '';
+      
+      appData.schedule.forEach(day => {
+        const isActive = day.date === currentActiveDate;
+        const btn = document.createElement('button');
+        btn.className = `min-h-[48px] px-5 py-2 rounded-full whitespace-nowrap font-semibold text-sm transition-all duration-300 ${isActive ? 'bg-navy text-white shadow-md' : 'bg-transparent text-gray-500 border border-gray-300'}`;
+        btn.innerHTML = `<span class="block text-xs font-normal opacity-80">${day.dayWeek}</span>${day.label}`;
+        btn.onclick = () => {
+          currentActiveDate = day.date;
+          renderTabs();
+          renderSchedule(day.date);
+        };
+        container.appendChild(btn);
+      });
+    }
+
+    function getMapsLink(loc) {
+      if (!loc || loc.trim() === '') return '#';
+      return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(loc)}`;
+    }
+
+    function renderSchedule(dateStr) {
+      const container = document.getElementById('schedule-container');
+      container.innerHTML = '';
+      
+      const dayData = appData.schedule.find(d => d.date === dateStr);
+      if (!dayData) return;
+
+      dayData.events.forEach(event => {
+        const mapLinkHTML = event.location 
+          ? `<a href="${getMapsLink(event.location)}" target="_blank" class="text-blue-600 text-sm mt-2 flex items-center gap-1 active:opacity-70 min-h-[32px] w-max p-1 -ml-1 rounded"><i class="fas fa-map-marker-alt"></i> ${event.location}</a>`
+          : `<span class="text-gray-400 text-sm mt-2 flex items-center gap-1"><i class="fas fa-map-marker-alt"></i> Local não definido</span>`;
+
+        const html = `
+          <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 relative event-card" data-time="${event.time}">
+            <div class="flex justify-between items-start mb-2">
+              <span class="text-navy font-bold text-2xl tracking-tight">${event.time.replace(':', 'h')}</span>
+              <button onclick="openModal('uniformes')" class="bg-gold/20 text-navy-dark text-xs font-bold px-3 py-1.5 rounded-full min-h-[32px] active:bg-gold/40 transition">
+                ${event.uniform || 'Passeio'}
+              </button>
+            </div>
+            <h3 class="font-semibold text-gray-800 text-base leading-snug cursor-pointer" onclick="openEventDetails('${event.id}')">${event.title}</h3>
+            ${mapLinkHTML}
+            <button onclick="openEventDetails('${event.id}')" class="absolute inset-0 w-full h-full opacity-0" aria-label="Detalhes de ${event.title}"></button>
+          </div>
+        `;
+        container.insertAdjacentHTML('beforeend', html);
+      });
+
+      // Atualiza imediatamente o indicador ao trocar de aba
+      updateIndicator();
+    }
+
+    /**
+     * LÓGICA DO INDICADOR "AGORA"
+     */
+    function updateIndicator() {
+      // Remove indicadores existentes
+      document.querySelectorAll('.now-indicator-line').forEach(el => el.remove());
+      
+      // Hora e Data Real do Sistema
+      const now = new Date();
+      
+      // Formata YYYY-MM-DD local
+      const todayStr = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0') + '-' + String(now.getDate()).padStart(2, '0');
+      
+      // Só desenha a linha se a aba ativa for o dia de hoje
+      if (currentActiveDate !== todayStr) return;
+
+      const currentMinutes = now.getHours() * 60 + now.getMinutes();
+      const cards = document.querySelectorAll('.event-card');
+      let inserted = false;
+
+      for (let i = 0; i < cards.length; i++) {
+        const card = cards[i];
+        const timeStr = card.getAttribute('data-time'); // "HH:MM" ou "HH:MM*"
+        const [h, m] = timeStr.replace('*', '').split(':').map(Number);
+        const eventMinutes = (h * 60) + m;
+
+        const nextCard = cards[i + 1];
+        let nextEventMinutes = 24 * 60; // Fim do dia
+        
+        if (nextCard) {
+          const nextTimeStr = nextCard.getAttribute('data-time');
+          const [nh, nm] = nextTimeStr.replace('*', '').split(':').map(Number);
+          nextEventMinutes = (nh * 60) + nm;
+        }
+
+        // Se a hora atual está entre este evento e o próximo
+        if (currentMinutes >= eventMinutes && currentMinutes < nextEventMinutes) {
+          const indicatorHTML = `
+            <div class="now-indicator-line" style="top: 0px;">
+              <div class="now-indicator-dot"></div>
+            </div>
+          `;
+          card.style.position = 'relative';
+          // Injeta a linha no topo do cartão ativo
+          card.insertAdjacentHTML('afterbegin', indicatorHTML);
+          inserted = true;
+          break;
+        }
+      }
+
+      // Se for antes do primeiro evento do dia
+      if (!inserted && cards.length > 0) {
+        const [h0, m0] = cards[0].getAttribute('data-time').replace('*', '').split(':').map(Number);
+        if (currentMinutes < (h0 * 60)) {
+          cards[0].insertAdjacentHTML('beforebegin', `
+            <div class="now-indicator-line relative my-2 w-full">
+              <div class="now-indicator-dot"></div>
+            </div>
+          `);
+        }
+      }
+    }
+
+    /**
+     * MODAIS E INTERFACES (Bottom Sheet)
+     */
+    function openModal(type) {
+      const modalBody = document.getElementById('modal-body');
+      let content = '';
+
+      if (type === 'autoridades') {
+        content = `<h2 class="text-xl font-bold text-navy mb-4"><i class="fas fa-star mr-2 text-gold"></i> Autoridades</h2><ul class="space-y-3">`;
+        appData.logistics.autoridades.forEach(a => {
+          content += `<li class="flex flex-col bg-gray-50 p-3 rounded-lg border border-gray-100"><span class="font-bold text-gray-800">${a.funcao}</span><span class="text-gray-600 text-sm">${a.nome}</span></li>`;
+        });
+        content += `</ul>`;
+      } else if (type === 'acomodacao') {
+        content = `<h2 class="text-xl font-bold text-navy mb-4"><i class="fas fa-bed mr-2 text-gold"></i> Acomodações</h2><ul class="space-y-3">`;
+        appData.logistics.acomodacao.forEach(a => {
+          content += `<li class="flex flex-col bg-gray-50 p-3 rounded-lg border border-gray-100"><span class="font-bold text-gray-800">${a.local}</span><span class="text-gray-600 text-sm"><i class="fas fa-map-marker-alt mr-1"></i> ${a.cidade}</span></li>`;
+        });
+        content += `</ul>`;
+      } else if (type === 'uniformes') {
+        content = `<h2 class="text-xl font-bold text-navy mb-4"><i class="fas fa-tshirt mr-2 text-gold"></i> Planilha de Uniformes</h2><div class="space-y-2">`;
+        appData.logistics.uniformes.forEach(u => {
+          content += `<div class="bg-gray-50 p-3 rounded-lg border border-gray-100"><span class="inline-block bg-navy text-white text-xs px-2 py-1 rounded mb-1 font-bold">${u.id}</span><p class="text-sm text-gray-700">${u.desc}</p></div>`;
+        });
+        content += `</div>`;
+      } else if (type === 'viaturas') {
+        content = `<h2 class="text-xl font-bold text-navy mb-4"><i class="fas fa-car mr-2 text-gold"></i> Logística de Viaturas</h2><div class="space-y-3">`;
+        appData.logistics.viaturas.forEach(v => {
+          content += `<div class="bg-gray-50 p-3 rounded-lg border border-gray-100 flex justify-between items-center">
+            <div><p class="font-bold text-gray-800">${v.prefixo} <span class="text-xs bg-gray-200 text-gray-600 px-2 py-0.5 rounded ml-1">${v.placa}</span></p><p class="text-sm text-gray-600">${v.tipo} | Motorista: ${v.motorista}</p></div>
+          </div>`;
+        });
+        content += `</div>`;
+      } else if (type === 'contatos') {
+        content = `<h2 class="text-xl font-bold text-navy mb-4"><i class="fas fa-phone-alt mr-2 text-gold"></i> Contatos da Coordenação</h2><div class="space-y-3">`;
+        appData.logistics.contatos.forEach(c => {
+          content += `<div class="bg-gray-50 p-3 rounded-lg border border-gray-100 flex flex-col gap-2">
+            <div><p class="font-bold text-gray-800">${c.nome}</p><p class="text-sm text-gray-600 font-mono">${c.display}</p></div>
+            <div class="flex gap-2">
+              <a href="tel:+${c.tel}" class="flex-1 bg-navy text-white text-center py-2 rounded-lg text-sm font-semibold min-h-[44px] flex items-center justify-center gap-2 active:bg-navy-dark"><i class="fas fa-phone"></i> Ligar</a>
+              <a href="https://wa.me/${c.tel}" target="_blank" class="flex-1 bg-green-600 text-white text-center py-2 rounded-lg text-sm font-semibold min-h-[44px] flex items-center justify-center gap-2 active:bg-green-700"><i class="fab fa-whatsapp text-lg"></i> WhatsApp</a>
+            </div>
+          </div>`;
+        });
+        content += `</div>`;
+      }
+
+      modalBody.innerHTML = content;
+      document.getElementById('bottom-sheet').classList.add('active');
+    }
+
+    function openEventDetails(eventId) {
+      let evData = null;
+      let evDate = null;
+      
+      appData.schedule.forEach(d => {
+        const found = d.events.find(e => e.id === eventId);
+        if (found) {
+          evData = found;
+          evDate = d.label;
+        }
+      });
+
+      if (!evData) return;
+
+      const modalBody = document.getElementById('modal-body');
+      modalBody.innerHTML = `
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="text-2xl font-bold text-navy">${evData.time.replace(':', 'h')}</h2>
+          <span class="text-sm text-gray-500 font-semibold">${evDate}</span>
+        </div>
+        <h3 class="text-lg font-bold text-gray-800 mb-4">${evData.title}</h3>
+        <div class="space-y-4">
+          ${evData.location ? `
+            <div>
+              <p class="text-xs text-gray-500 font-semibold uppercase tracking-wider mb-1">Local</p>
+              <a href="${getMapsLink(evData.location)}" target="_blank" class="flex items-center gap-2 text-blue-600 bg-blue-50 p-3 rounded-lg min-h-[48px] font-medium active:bg-blue-100 transition">
+                <i class="fas fa-map-marker-alt text-lg"></i> ${evData.location}
+                <i class="fas fa-external-link-alt ml-auto text-sm opacity-50"></i>
+              </a>
+            </div>
+          ` : ''}
+          <div>
+            <p class="text-xs text-gray-500 font-semibold uppercase tracking-wider mb-1">Uniforme / Traje</p>
+            <div class="bg-gray-50 p-3 rounded-lg font-medium text-gray-800 flex items-center gap-2">
+              <i class="fas fa-tshirt text-gray-400"></i> ${evData.uniform || 'Não especificado'}
+            </div>
+          </div>
+          ${evData.obs ? `
+            <div>
+              <p class="text-xs text-gray-500 font-semibold uppercase tracking-wider mb-1">Observações e Participantes</p>
+              <div class="bg-yellow-50/50 border border-yellow-100 p-3 rounded-lg text-sm text-gray-700 whitespace-pre-wrap">
+                ${evData.obs}
+              </div>
+            </div>
+          ` : ''}
+        </div>
+      `;
+      document.getElementById('bottom-sheet').classList.add('active');
+    }
+
+    function closeModal() {
+      document.getElementById('bottom-sheet').classList.remove('active');
+    }
+
+    // Inicializar aplicação
+    window.addEventListener('DOMContentLoaded', initApp);
+  </script>
+</body>
+</html>
+
+
 
