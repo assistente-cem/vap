@@ -40,7 +40,7 @@
   <header class="sticky top-0 z-30 glass-header border-b-2 border-gold text-white shadow-lg relative">
     <div class="absolute top-2 right-3 z-40">
       <span class="text-[10px] font-mono font-bold text-sky-300/80 bg-white/10 backdrop-blur-sm px-2 py-0.5 rounded-md border border-sky-400/20 shadow-xs">
-        v4.1
+        v4.2
       </span>
     </div>
 
@@ -96,6 +96,7 @@
             <select id="filterUniform" onchange="applyFilters()" class="w-full bg-slate-900/90 text-white border border-white/20 rounded-xl px-2.5 py-1.5 text-xs font-bold focus:outline-none focus:ring-2 focus:ring-gold appearance-none">
               <option value="">Uniforme</option>
               <option value="OP3">OP3</option>
+              <option value="CMP">CMP</option>
               <option value="6.6">6.6</option>
               <option value="5.5">5.5</option>
               <option value="Passeio">Passeio</option>
@@ -468,20 +469,21 @@
         weekDay: "Quinta-feira",
         events: [
           { id: "08.01", time: "02:15", endHour: 3.0, activity: "Chegada da Sra Ana - Esposa do AE Sílvio Luís (Voo GOL 2008)", location: "Aeroporto Internacional de Belém", city: "Belém", uniform: "-", participants: "DGN e DN-01", flight: "G32008", notes: "Voo GOL 2008." },
-          { id: "08.02", time: "06:00", endHour: 7.0, activity: "TFM", location: "Vila Naval Espadarte", city: "Belém", uniform: "TFM", participants: "Comitiva", notes: "TFM." },
-          { id: "08.03", time: "07:00", endHour: 8.33, activity: "Café da manhã", location: "Residência funcional do Com4ºDN", city: "Belém", uniform: "-", participants: "Almirantes e esposas", notes: "Café." },
-          { id: "08.04", time: "07:30", endHour: 9.0, activity: "Deslocamento para a Base aérea de Belém (BABE)", location: "Residência para BABE", city: "Belém", uniform: "OP3/6.6", participants: "ComGer, DGN, DN-02", notes: "Deslocamento." },
-          { id: "08.05", time: "08:00", endHour: 10.0, activity: "Decolagem para Macapá", location: "Voo FAB", city: "Belém", uniform: "OP3/6.6", participants: "ComGer, DGN, DN-02", flight: "FAB01", notes: "FAB." },
-          { id: "08.06", time: "10:00", endHour: 10.33, activity: "Pouso em Macapá", location: "Aeroporto Internacional de Macapá", city: "Macapá", uniform: "OP3/6.6", participants: "ComGer, DGN, DN-02, CPAP", notes: "Pouso." },
-          { id: "08.07", time: "10:20", endHour: 11.0, activity: "Deslocamento para CPAP", location: "Aeroporto para CPAP", city: "Macapá", uniform: "OP3/6.6", participants: "ComGer, DGN, DN-02, CPAP", notes: "Deslocamento." },
-          { id: "08.08", time: "11:00", endHour: 12.0, activity: "Honras de recepção e visita às instalações da CPAP", location: "CPAP", city: "Macapá", uniform: "OP3/6.6", participants: "ComGer, DGN, DN-02, CPAP", notes: "CPAP." },
-          { id: "08.09", time: "12:15", endHour: 13.75, activity: "Almoço", location: "CPAP", city: "Macapá", uniform: "OP3/6.6", participants: "ComGer, DGN, DN-02, CPAP", notes: "Almoço." },
-          { id: "08.10", time: "14:00", endHour: 15.0, activity: "Visita às instalações portuárias da CDSA", location: "Companhia Docas de Santana", city: "Macapá", uniform: "OP3/6.6", participants: "ComGer, DGN, DN-02, CPAP", notes: "CDSA." },
-          { id: "08.11", time: "15:10", endHour: 15.5, activity: "Deslocamento para o terreno da Fazendinha", location: "CDSA para Terreno da Fazendinha", city: "Macapá", uniform: "OP3/6.6", participants: "ComGer, DGN, DN-02, CPAP", notes: "Deslocamento." },
-          { id: "08.12", time: "15:30", endHour: 16.0, activity: "Visita ao terreno da Fazendinha e deslocamento para o hotel", location: "Fazendinha", city: "Macapá", uniform: "OP3/6.6", participants: "ComGer, DGN, DN-02, CPAP", notes: "Fazendinha." },
-          { id: "08.13", time: "16:30", endHour: 19.5, activity: "Check-in no hotel e acomodação", location: "Hotel do Forte", city: "Macapá", uniform: "OP3/6.6", participants: "ComGer, DGN, DN-02, CPAP", notes: "Acomodação." },
-          { id: "08.14", time: "19:30", endHour: 21.0, activity: "Jantar com Soamarinos", location: "Restaurante Estaleiro", city: "Macapá", uniform: "Esporte Amazônico", participants: "ComGer, DGN, DN-02, CPAP", notes: "Jantar." },
-          { id: "08.15", time: "21:00", endHour: 22.0, activity: "Chegada do AE Olsen (CM) a Belém (Voo TAP47)", location: "Aeroporto Internacional de Belém", city: "Belém", uniform: "-", participants: "DN-01", flight: "TP47", notes: "Voo TAP TAP47." }
+          { id: "08.02", time: "07:30", endHour: 7.66, activity: "Deslocamento Residência x Base aérea de Belém (BABE)", location: "Residência para BABE", city: "Belém", uniform: "CMP", participants: "ComGer, DGN, DN-02, Comitiva", notes: "Distância: 2km | Tempo: 10min" },
+          { id: "08.03", time: "07:40", endHour: 8.0, activity: "Check-in na BABE", location: "Base aérea de Belém (BABE)", city: "Belém", uniform: "CMP", participants: "ComGer, DGN, DN-02, Comitiva", notes: "Check-in" },
+          { id: "08.04", time: "08:00", endHour: 9.25, activity: "Voo Belém x Macapá (FAB)", location: "Voo FAB", city: "Belém", uniform: "CMP", participants: "ComGer, DGN, DN-02, Comitiva", flight: "FAB01", notes: "Voo FAB" },
+          { id: "08.05", time: "09:40", endHour: 10.16, activity: "Deslocamento Aeroporto x Terreno Fazendinha", location: "Aeroporto para Terreno Fazendinha", city: "Macapá", uniform: "CMP", participants: "ComGer, DGN, DN-02, CPAP", notes: "Distância: 20km | Tempo: 30min" },
+          { id: "08.06", time: "10:10", endHour: 10.5, activity: "Visita ao Terreno Fazendinha", location: "Terreno Fazendinha", city: "Macapá", uniform: "CMP", participants: "ComGer, DGN, DN-02, CPAP", notes: "Visita ao terreno" },
+          { id: "08.07", time: "10:30", endHour: 10.66, activity: "Deslocamento Fazendinha x CPAP", location: "Fazendinha para CPAP", city: "Macapá", uniform: "CMP", participants: "ComGer, DGN, DN-02, CPAP", notes: "Distância: 6km | Tempo: 10min" },
+          { id: "08.08", time: "10:40", endHour: 11.83, activity: "Honras de recepção e visita às instalações da CPAP", location: "Capitania dos Portos do Amapá (CPAP)", city: "Macapá", uniform: "CMP", participants: "ComGer, DGN, DN-02, CPAP", notes: "Roteiro: Gabinete, GAP, CCCAM, Seção de Saúde, Auditório, Clube Tucuju, EPM, Cais." },
+          { id: "08.09", time: "12:00", endHour: 13.66, activity: "Almoço na CPAP", location: "CPAP", city: "Macapá", uniform: "CMP", participants: "ComGer, DGN, DN-02, CPAP", notes: "Almoço na CPAP" },
+          { id: "08.10", time: "13:45", endHour: 13.83, activity: "Deslocamento CPAP x CDSA", location: "CPAP para CDSA", city: "Macapá", uniform: "CMP", participants: "ComGer, DGN, DN-02, CPAP", notes: "Distância: 2km | Tempo: 5min" },
+          { id: "08.11", time: "14:00", endHour: 15.0, activity: "Visita às instalações portuárias da CDSA", location: "Companhia das Docas de Santana (CDSA)", city: "Macapá", uniform: "CMP", participants: "ComGer, DGN, DN-02, CPAP", notes: "Companhia das Docas de Santana" },
+          { id: "08.12", time: "15:10", endHour: 15.83, activity: "Deslocamento CDSA x Hotel do Forte", location: "CDSA para Hotel do Forte", city: "Macapá", uniform: "CMP", participants: "ComGer, DGN, DN-02, CPAP", notes: "Distância: 20km | Tempo: 40min" },
+          { id: "08.13", time: "16:00", endHour: 19.25, activity: "Check-in no hotel e acomodação", location: "Hotel do Forte", city: "Macapá", uniform: "-", participants: "ComGer, DGN, DN-02, CPAP", notes: "Acomodação Hotel do Forte" },
+          { id: "08.14", time: "19:25", endHour: 19.5, activity: "Deslocamento para o Restaurante Estaleiro", location: "Hotel do Forte para Restaurante Estaleiro", city: "Macapá", uniform: "Esporte Amazônico", participants: "ComGer, DGN, DN-02, CPAP", notes: "Distância: 1km | Tempo: 5min" },
+          { id: "08.15", time: "19:30", endHour: 21.5, activity: "Jantar com Soamarinos", location: "Restaurante Estaleiro", city: "Macapá", uniform: "Esporte Amazônico", participants: "ComGer, DGN, DN-02, SOAMAR-AP e convidados", notes: "Presenças: Glauco Cei, Drª Ivana Cei, Kelly Dantas, Teles Junior, Dep. Dorinaldo Malafaia, Marcio Bragança, membros SOAMAR-AP." },
+          { id: "08.16", time: "21:55", endHour: 22.5, activity: "Chegada do AE Olsen (CM) a Belém (Voo TAP47)", location: "Aeroporto Internacional de Belém", city: "Belém", uniform: "-", participants: "DN-01", flight: "TP47", notes: "Voo TAP TAP47." }
         ]
       },
       {
@@ -489,19 +491,18 @@
         dayLabel: "09 OUT",
         weekDay: "Sexta-feira",
         events: [
-          { id: "09.01", time: "07:00", endHour: 8.0, activity: "Café da manhã", location: "Hotel do Forte", city: "Macapá", uniform: "-", participants: "ComGer, DGN, DN-02, CPAP", notes: "Café." },
-          { id: "09.02", time: "08:00", endHour: 9.0, activity: "Check-out e deslocamento para o aeroporto", location: "Hotel do Forte para Aeroporto de Macapá", city: "Macapá", uniform: "OP3/6.6", participants: "ComGer, DGN, DN-02, CPAP", notes: "Deslocamento." },
-          { id: "09.03", time: "09:00", endHour: 10.0, activity: "Decolagem para Oiapoque", location: "Aeroporto de Macapá", city: "Macapá", uniform: "OP3/6.6", participants: "ComGer, DGN, DN-02, CPAP", flight: "FAB02", notes: "FAB." },
-          { id: "09.04", time: "10:00", endHour: 10.33, activity: "Pouso no Aeroporto", location: "Aeroporto de Oiapoque", city: "Oiapoque", uniform: "OP3/6.6", participants: "ComGer, DGN, DN-02, CPAP", notes: "Pouso." },
-          { id: "09.05", time: "10:20", endHour: 10.58, activity: "Deslocamento para Agência do Oiapoque", location: "Aeroporto para AgOiapoque", city: "Oiapoque", uniform: "OP3/6.6", participants: "ComGer, DGN, DN-02, CPAP", notes: "Deslocamento." },
-          { id: "09.06", time: "10:35", endHour: 11.0, activity: "Honras de recepção e visita às instalações da AgOiapoque", location: "AgOiapoque", city: "Oiapoque", uniform: "OP3/6.6", participants: "ComGer, DGN, DN-02, CPAP, Agente", notes: "AgOiapoque." },
-          { id: "09.07", time: "11:00", endHour: 11.5, activity: "Reunião com comitiva francesa", location: "AgOiapoque", city: "Oiapoque", uniform: "OP3/6.6", participants: "ComGer, DGN, DN-02, CPAP, Agente", notes: "Reunião." },
-          { id: "09.08", time: "11:40", endHour: 12.33, activity: "Navegação pelo Rio Oiapoque", location: "AgOiapoque", city: "Oiapoque", uniform: "OP3/6.6", participants: "ComGer, DGN, DN-02, CPAP, Agente", notes: "Navegação." },
-          { id: "09.09", time: "12:30", endHour: 14.0, activity: "Almoço por adesão", location: "Churrascaria Gaúcha", city: "Oiapoque", uniform: "OP3/6.6", participants: "ComGer, DGN, DN-02, CPAP, Agente", notes: "Almoço." },
-          { id: "09.10", time: "14:00", endHour: 14.5, activity: "Deslocamento para o aeroporto", location: "Oiapoque para Aeroporto", city: "Oiapoque", uniform: "OP3/6.6", participants: "ComGer, DGN, DN-02, CPAP, Agente", notes: "Deslocamento." },
-          { id: "09.11", time: "14:30", endHour: 16.0, activity: "Voo de regresso para Belém", location: "Aeroporto de Oiapoque", city: "Oiapoque", uniform: "OP3/6.6", participants: "ComGer, DGN, DN-02", flight: "FAB03", notes: "Voo Belém." },
-          { id: "09.12", time: "16:00", endHour: 17.0, activity: "Pouso em Belém e deslocamento para residência funcional do Com4ºDN", location: "Aeroporto de Belém para Residência Funcional", city: "Belém", uniform: "OP3/6.6", participants: "ComGer, DGN, DN-02", notes: "Pouso." },
-          { id: "09.13", time: "19:30", endHour: 22.0, activity: "Jantar", location: "ASD", city: "Belém", uniform: "Esporte Amazônico", participants: "Almirantes e esposas", notes: "Jantar." }
+          { id: "09.01", time: "06:30", endHour: 7.16, activity: "Café da manhã", location: "Hotel do Forte", city: "Macapá", uniform: "-", participants: "ComGer, DGN, DN-02, CPAP", notes: "Café da manhã no Hotel do Forte" },
+          { id: "09.02", time: "07:10", endHour: 7.5, activity: "Check-out e deslocamento para o aeroporto", location: "Hotel do Forte para Aeroporto de Macapá", city: "Macapá", uniform: "CMP", participants: "ComGer, DGN, DN-02, CPAP", notes: "Distância: 5km | Tempo: 11min / Check-in" },
+          { id: "09.03", time: "08:00", endHour: 9.0, activity: "Voo para Oiapoque (FAB)", location: "Aeroporto de Macapá", city: "Macapá", uniform: "CMP", participants: "ComGer, DGN, DN-02, CPAP", flight: "FAB02", notes: "Voo FAB para Oiapoque" },
+          { id: "09.04", time: "09:20", endHour: 9.58, activity: "Deslocamento para Agência do Oiapoque", location: "Aeroporto de Oiapoque para AgOiapoque", city: "Oiapoque", uniform: "CMP", participants: "ComGer, DGN, DN-02, CPAP", notes: "Distância: 6km | Tempo: 12min" },
+          { id: "09.05", time: "09:35", endHour: 10.5, activity: "Honras de recepção e visita às instalações da AgOiapoque", location: "AgOiapoque", city: "Oiapoque", uniform: "CMP", participants: "ComGer, DGN, DN-02, CPAP, Agente", notes: "Agência Fluvial de Oiapoque" },
+          { id: "09.06", time: "10:45", endHour: 11.75, activity: "Reunião com comitiva francesa", location: "AgOiapoque", city: "Oiapoque", uniform: "CMP", participants: "ComGer, DGN, DN-02, CPAP, Agente, Comitiva Francesa", notes: "Reunião na AgOiapoque" },
+          { id: "09.07", time: "11:50", endHour: 12.33, activity: "Navegação pelo Rio Oiapoque", location: "Rio Oiapoque", city: "Oiapoque", uniform: "CMP", participants: "ComGer, DGN, DN-02, CPAP, Agente", notes: "Navegação fluvial" },
+          { id: "09.08", time: "12:30", endHour: 13.83, activity: "Almoço", location: "Churrascaria Gaúcha", city: "Oiapoque", uniform: "CMP", participants: "ComGer, DGN, DN-02, CPAP, Agente", notes: "Almoço Churrascaria Gaúcha" },
+          { id: "09.09", time: "14:00", endHour: 14.66, activity: "Visita à Unidade de Recuperação da Fauna", location: "Unidade de Recuperação da Fauna", city: "Oiapoque", uniform: "CMP", participants: "ComGer, DGN, DN-02, CPAP, Agente", notes: "Visita técnica" },
+          { id: "09.10", time: "14:50", endHour: 15.0, activity: "Deslocamento para o aeroporto", location: "Oiapoque para Aeroporto de Oiapoque", city: "Oiapoque", uniform: "CMP", participants: "ComGer, DGN, DN-02, CPAP", notes: "Deslocamento aeroporto" },
+          { id: "09.11", time: "15:00", endHour: 16.33, activity: "Voo de regresso para Belém (FAB)", location: "Aeroporto de Oiapoque", city: "Oiapoque", uniform: "CMP", participants: "ComGer, DGN, DN-02", flight: "FAB03", notes: "Voo FAB Oiapoque x Belém" },
+          { id: "09.12", time: "19:30", endHour: 22.0, activity: "Jantar (\"Noite Paraense\")", location: "Residência Funcional do Com4ºDN", city: "Belém", uniform: "Esporte Amazônico", participants: "Almirantes e esposas", notes: "Noite Paraense na Residência Funcional" }
         ]
       }
     ];
@@ -992,7 +993,7 @@
         { autoridade: "C Alte JOSÉ FABIO", estadias: [{ cidade: "Macapá-AP", local: "Hotel do Forte", periodo: "08 a 09OUT" }] }
       ],
       uniformes: [
-        { nome: "OP3", file: "op3.png" }, { nome: "6.6", file: "6.6.png" }, { nome: "Passeio", file: "passeio.png" },
+        { nome: "OP3", file: "op3.png" }, { nome: "CMP", file: "cmp.png" }, { nome: "6.6", file: "6.6.png" }, { nome: "Passeio", file: "passeio.png" },
         { nome: "TFM", file: "tfm.png" }, { nome: "Casual", file: "casual.png" }, { nome: "5.5", file: "5.5.png" },
         { nome: "Esporte Amazônico", file: "esporte-amazonico.png" }
       ],
@@ -1058,7 +1059,6 @@
       }
     }
 
-    // FORMATAÇÃO DO ACOMPANHANTE EM AUTORIDADES
     function formatAcompanhanteAutoridade(esposa) {
       if (!esposa || esposa === '-') return '';
       const text = esposa.trim();
@@ -1066,7 +1066,6 @@
       return `<p class="text-[16px] sm:text-[18px] font-black text-navy leading-snug"><i class="fa-solid fa-user-group text-gold-dark mr-1.5 text-xs"></i>Acompanhado da Sra. ${cleanName}</p>`;
     }
 
-    // FORMATAÇÃO DO ACOMPANHANTE EM VOOS
     function formatAcompanhanteVoo(acompanhante) {
       if (!acompanhante || acompanhante === '-') return '';
       const text = acompanhante.trim();
@@ -1335,7 +1334,6 @@
       `).join('');
     }
 
-    // RENDERIZADOR DO MODAL DE VOOS - HORÁRIO AMPLIADO E COM DESTAQUE DESTACADO
     function renderVoosModal() {
       const container = document.getElementById('voosListContainer');
       if (!container) return;
@@ -1400,20 +1398,15 @@
                         ${v.cia}${v.voo}
                       </span>
                     </div>
-                    <!-- HORÁRIO COM FONTE AUMENTADA E ENFASE DESTAQUE -->
                     <span class="text-sm sm:text-base font-black text-navy font-mono bg-amber-100 text-navy-dark px-3 py-1 rounded-xl border-2 border-gold shadow-sm flex items-center gap-1.5">
                       <i class="fa-regular fa-clock text-gold-dark"></i>${v.horario}
                     </span>
                   </div>
 
-                  <!-- LISTA DE PASSAGEIROS -->
                   <div class="space-y-2 pt-1 border-t border-slate-200/60">
                     ${v.passageiros.map(p => `
                       <div class="bg-white p-3 rounded-xl border border-slate-200/80 space-y-1">
-                        <!-- AUTORIDADE -->
                         <h4 class="text-base sm:text-lg font-black text-slate-900 leading-tight">${p.pessoa}</h4>
-                        
-                        <!-- ACOMPANHANTE -->
                         ${p.acompanhante && p.acompanhante !== '-' ? `
                           ${formatAcompanhanteVoo(p.acompanhante)}
                         ` : ''}
